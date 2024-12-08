@@ -1,18 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MovieList from './components/MovieList';
 import Recommendations from './components/Recommendations';
-import Navbar from './components/Navbar'; 
+import Navbar from './components/Navbar';
+import TopMovies from './components/TopMovies';
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleBackground = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen p-4">
-      <Navbar />
-      <h1 className="text-2xl font-bold text-center mb-6">
-        Movie Recommendation System
-      </h1>
-      <MovieList />
-      <Recommendations />
-    </div>
+    <Router>
+      <div className={`min-h-screen p-4 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
+        <Navbar toggleBackground={toggleBackground} />
+        <Routes>
+          <Route path="/" element={<TopMovies />} />
+          <Route path="/movies" element={<MovieList />} />
+          <Route path="/help" element={<Recommendations />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
