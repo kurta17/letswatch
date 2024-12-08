@@ -1,31 +1,28 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMoon } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
-function Navbar() {
+function Navbar({ toggleBackground }) {
   return (
     <nav className="bg-blue-500 text-white p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <a href="/" className="text-xl font-bold hover:text-gray-200">
+        <Link to="/" className="text-xl font-bold hover:text-gray-200">
           Let's Watch
-        </a>
-        <div className="flex space-x-4">
-          <a
-            href="/"
-            className="hover:text-gray-200 transition-colors"
-          >
+        </Link>
+        <div className="flex space-x-4 items-center">
+          <Link to="/" className="hover:text-gray-200 transition-colors">
             Home
-          </a>
-          <a
-            href="/movies"
-            className="hover:text-gray-200 transition-colors"
-          >
+          </Link>
+          <Link to="/movies" className="hover:text-gray-200 transition-colors">
             Movies
-          </a>
-          <a
-            href="/help"
-            className="hover:text-gray-200 transition-colors"
-          >
-            Help
-          </a>
+          </Link>
+          <Link to="/help" className="hover:text-gray-200 transition-colors">
+            Help Me Decide
+          </Link>
+          <button onClick={toggleBackground} className="text-xl hover:text-gray-200 transition-colors">
+            <FontAwesomeIcon icon={faMoon} />
+          </button>
         </div>
       </div>
     </nav>
