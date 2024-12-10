@@ -1,37 +1,46 @@
-import React from 'react';
-
-const topMovies = [
-  { id: 1, title: 'Movie 1', image: 'path/to/image1.jpg' },
-  { id: 2, title: 'Movie 2', image: 'path/to/image2.jpg' },
-  { id: 3, title: 'Movie 3', image: 'path/to/image3.jpg' },
-  { id: 4, title: 'Movie 4', image: 'path/to/image4.jpg' },
-  { id: 5, title: 'Movie 5', image: 'path/to/image5.jpg' },
-  { id: 6, title: 'Movie 6', image: 'path/to/image6.jpg' },
-  { id: 7, title: 'Movie 7', image: 'path/to/image7.jpg' },
-  { id: 8, title: 'Movie 8', image: 'path/to/image8.jpg' },
-  { id: 9, title: 'Movie 9', image: 'path/to/image9.jpg' },
-  { id: 10, title: 'Movie 10', image: 'path/to/image10.jpg' },
-  { id: 11, title: 'Movie 11', image: 'path/to/image11.jpg' },
-  { id: 12, title: 'Movie 12', image: 'path/to/image12.jpg' },
-  { id: 13, title: 'Movie 13', image: 'path/to/image13.jpg' },
-  { id: 14, title: 'Movie 14', image: 'path/to/image14.jpg' },
-  { id: 15, title: 'Movie 15', image: 'path/to/image15.jpg' },
-  { id: 16, title: 'Movie 16', image: 'path/to/image16.jpg' },
-  { id: 17, title: 'Movie 17', image: 'path/to/image17.jpg' },
-  { id: 18, title: 'Movie 18', image: 'path/to/image18.jpg' },
-  { id: 19, title: 'Movie 19', image: 'path/to/image19.jpg' },
-  { id: 20, title: 'Movie 20', image: 'path/to/image20.jpg' },
-];
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function TopMovies() {
+  const [topMovies, setTopMovies] = useState([]);  // State to store the movie data
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch the top 20 movies from your backend or API
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/movies'); // Replace with actual API endpoint
+        const data = await response.json();
+        setTopMovies(data.slice(0, 20));  // Get top 20 movies
+      } catch (error) {
+        console.error('Error fetching movie data:', error);
+      }
+    };
+
+    fetchMovies();
+  }, []);  // Empty dependency array to fetch data on component mount
+
+  const handleClick = (title) => {
+    navigate(`/movie/${title}`);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-4xl font-extrabold text-center mb-20 text-indigo-600">Top 20 Movies</h1>
+    <div style={{'width': '80rem'}} className="mx-auto p-4">
+      <h1 className="text-5xl font-extrabold text-center mb-20 text-blue-400">Top 20 Movies</h1>
       <div className="flex overflow-x-auto space-x-4 pb-4">
-        {topMovies.map(movie => (
-          <div key={movie.id} className="min-w-[250px] bg-white p-4 rounded-lg shadow-lg transform transition-transform hover:scale-105">
-            <img src={movie.image} alt={movie.title} className="w-full h-60 object-cover rounded-lg mb-4" />
+        {topMovies.map((movie, index) => (
+          <div
+            key={index}
+            className="min-w-[250px] bg-white p-4 rounded-lg shadow-lg transform transition-transform hover:scale-105"
+            onClick={() => handleClick(movie.title)} // Click handler for redirection
+          >
+            <img
+              src={movie.poster || "https://via.placeholder.com/300x450?text=No+Poster"}
+              alt={movie.title}
+              className="w-full h-60 object-cover rounded-lg mb-4"
+            />
             <h2 className="text-xl font-semibold text-gray-800">{movie.title}</h2>
+            <p className="text-sm text-gray-500">{movie.release_date}</p>
           </div>
         ))}
       </div>

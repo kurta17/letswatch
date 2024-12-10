@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 function Navbar({ toggleBackground }) {
   return (
-    <nav className="bg-blue-500 text-white p-4 shadow-md">
+    <nav className="bg-blue-400 text-white p-4 shadow-md rounded-lg">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-bold hover:text-gray-200">
           Let's Watch
