@@ -4,6 +4,7 @@ import MovieList from './components/MovieList';
 import Recommendations from './components/Recommendations';
 import Navbar from './components/Navbar';
 import TopMovies from './components/TopMovies';
+import MovieInfo from './components/MovieInfo';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<TopMovies />} />
           <Route path="/movies" element={<MovieList />} />
           <Route path="/help" element={<Recommendations />} />
+          <Route path="/movie/:title" element={<MovieInfo />} />
         </Routes>
       </div>
     </Router>
