@@ -6,12 +6,16 @@ function TopMovies() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the top 20 movies from your backend or API
     const fetchMovies = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/movies'); // Replace with actual API endpoint
+        console.log('Fetching movies...');
+        const response = await fetch('http://127.0.0.1:5000/top20movies');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
-        setTopMovies(data.slice(0, 20));  // Get top 20 movies
+        console.log('Fetched data:', data);
+        setTopMovies(data);  // Set the top 20 movies
       } catch (error) {
         console.error('Error fetching movie data:', error);
       }
