@@ -15,7 +15,8 @@ CORS(app)
 MOVIE_DATA = "data/movies.csv"
 OMDB_API_KEY = "c78b646c"  # Your actual API key
 OMDB_API_URL = "http://www.omdbapi.com/"
-
+KINO_API_KEY = "V1rnkkloqpAHyFuNhgMFeSYKqE2iWT1tYcZZ7cfUzzMLx2NlCoTmAQh4w956wLXi"
+KINO_API_URL = "https://api.kinocheck.com/movies"
 
 def fetch_movie_poster(title):
     try:
@@ -37,6 +38,30 @@ def fetch_movie_poster(title):
     
     return "https://m.media-amazon.com/images/M/MV5BMDEzMmQwZjctZWU2My00MWNlLWE0NjItMDJlYTRlNGJiZjcyXkEyXkFqcGc@._V1_SX300.jpg"  # Fallback image
 
+
+def fetch_movie_trailer(tmdb_id):
+    """
+    Fetch the trailer from KinoCheck API using the TMDB ID.
+    """
+    url = f"{KINO_API_URL}?tmdb_id={tmdb_id}&categories=Trailer&language=en"
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Api-Key': KINO_API_KEY,
+        'X-Api-Host': 'api.kinocheck.com'
+    }
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        print(f"KinoCheck API response: {data}")  # Debugging log
+        if data.get("trailer"):
+            return data["trailer"]["url"]
+        else:
+            return None
+    else:
+        print(f"KinoCheck API error: {response.status_code} - {response.text}")  # Debugging log
+    return None
 
 
 @app.route("/helpmedicede", methods=["GET"])
@@ -112,7 +137,7 @@ def get_movies():
 
     movies = df[["title", "genres", "release_date", "vote_average", "vote_count"]]
     
-    movies["poster"] = movies["title"].apply(fetch_movie_poster)
+    # movies["poster"] = movies["title"].apply(fetch_movie_poster)
     
     start = (page - 1) * limit
     end = start + limit
@@ -124,23 +149,30 @@ def get_movies():
     })
 
 
-
 @app.route("/movie/<string:title>", methods=["GET"])
 def get_movie_info(title):
     # Load the CSV file into a DataFrame
     df = pd.read_csv(MOVIE_DATA)
-    
+
+    # Filter for the requested movie title
     movie = df[df["title"].str.lower() == title.lower()]
-    
+
     # Check if movie exists
     if movie.empty:
         return jsonify({"error": "Movie not found"}), 404
-    
+
+    # Fetch the poster and trailer for the movie
     movie["poster"] = movie["title"].apply(fetch_movie_poster)
+    tmdb_id = movie.iloc[0]["id"]  # Assuming the TMDB ID is in the "id" column
+    trailer = fetch_movie_trailer(tmdb_id)
 
-    # Convert the movie data to a dictionary and return it as JSON
-    return jsonify(movie.to_dict(orient="records")[0])  # Return the first match (in case of multiple)
+    # Convert the movie data to a dictionary and add the trailer
+    movie_info = movie.iloc[0].to_dict()
+    movie_info["poster"] = movie["poster"].iloc[0]
+    movie_info["trailer"] = trailer or "Trailer not available"
 
+    # Return the movie data as JSON
+    return jsonify(movie_info)
 
 
 if __name__ == "__main__":
