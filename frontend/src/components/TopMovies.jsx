@@ -30,7 +30,7 @@ function TopMovies() {
 
   return (
     <div style={{'width': '80rem'}} className="mx-auto p-4">
-      <h1 className="text-5xl font-extrabold text-center mb-20 text-blue-400">Top 20 Movies</h1>
+      <h1 className="text-5xl font-extrabold text-center mb-20 text-blue-400 mt-4">Top 20 Movies</h1>
       <div className="flex overflow-x-auto space-x-4 pb-4">
         {topMovies.map((movie, index) => (
           <div
