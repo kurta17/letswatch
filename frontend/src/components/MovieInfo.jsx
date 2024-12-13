@@ -32,21 +32,21 @@ function MovieInfo() {
   }, [movieInfo]);
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
+    <div style={{marginTop:'2rem'}} className="max-w-4xl mx-auto p-8 bg-gray-100 rounded-lg shadow-lg">
       <h1 className="text-5xl font-extrabold text-center mb-6 text-indigo-600">Movie Info</h1>
       
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
       {movieInfo && (
-        <div className="mt-6 bg-white p-6 rounded-lg shadow-lg flex flex-col md:flex-row">
+        <div className="mt-10 bg-white p-10 rounded-lg shadow-lg flex flex-col md:flex-row">
           <div className="flex-1 mb-6 md:mb-0">
             <h2 className="text-3xl font-semibold text-gray-800 mb-4">{movieInfo.title}</h2>
-            <p><strong>Release Date:</strong> {movieInfo.release_date}</p>
-            <p><strong>Genres:</strong> {movieInfo.genres}</p>
-            <p><strong>Overview:</strong> {movieInfo.overview}</p>
-            <p><strong>Budget:</strong> {movieInfo.budget}</p>
-            <p><strong>Revenue:</strong> {movieInfo.revenue}</p>
-            <p><strong>Vote Average:</strong> {movieInfo.vote_average}</p>
+            <p className="text-1xl font-semibold text-gray-800 mb-4"><strong>Release Date:</strong> {movieInfo.release_date}</p>
+            <p className="text-1xl font-semibold text-gray-800 mb-4"><strong>Genres:</strong> {movieInfo.genres}</p>
+            <p className="text-1xl font-semibold text-gray-800 mb-4"><strong>Overview:</strong> {movieInfo.overview}</p>
+            <p className="text-1xl font-semibold text-gray-800 mb-4"><strong>Budget:</strong> {movieInfo.budget}</p>
+            <p className="text-1xl font-semibold text-gray-800 mb-4"><strong>Revenue:</strong> {movieInfo.revenue}</p>
+            <p className="text-1xl font-semibold text-gray-800 mb-4"><strong>Vote Average:</strong> {movieInfo.vote_average}</p>
           </div>
           <div className="flex-shrink-0 md:ml-6">
             <img src={movieInfo.poster} alt={movieInfo.title} className="w-full md:w-64 h-auto object-cover rounded-lg shadow-md" />

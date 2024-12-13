@@ -44,27 +44,33 @@ function Recommendations() {
   const handleClick = (title) => {
     navigate(`/movie/${title}`);
   };
+  
+  const [isDarkMode, setIsDarkMode] = useState(false);
+    
+  const toggleBackground = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   return (
     <div>
-      <h1 className="text-5xl font-extrabold text-center mb-6 text-blue-400">Movie Recommendations</h1>
+      <h1 className="text-5xl font-extrabold text-center mb-6 text-blue-400 mt-6">Movie Recommendations</h1>
 
       {/* Search Input */}
       <form className="text-center mb-6" onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={movieTitle}
-          onChange={(e) => setMovieTitle(e.target.value)}
-          placeholder="Search for a movie..."
-          className="p-2 border rounded-lg w-2/3 sm:w-1/3"
-        />
-        <button
-          type="submit"
-          className="ml-2 p-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500"
-        >
-          Search
-        </button>
-      </form>
+      <input
+        type="text"
+        value={movieTitle}
+        onChange={(e) => setMovieTitle(e.target.value)}
+        placeholder="Search for a movie..."
+        className={`p-2 border rounded-lg w-2/3 sm:w-1/3 ${isDarkMode ? 'text-white' : 'text-black'}`}
+      />
+      <button
+        type="submit"
+        className={`ml-2 p-2 rounded-lg hover:bg-blue-500 ${isDarkMode ? 'bg-blue-700 text-white' : 'bg-blue-400 text-black'}`}
+      >
+        Search
+      </button>
+    </form>
 
       {/* Error Message */}
       {error && <p className="text-red-500 text-center">{error}</p>}

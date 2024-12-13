@@ -44,15 +44,21 @@ function MovieList() {
         {pageNumber}
       </button>
     ));
-  };
+  }; 
 
   const handleClick = (title) => {
     navigate(`/movie/${title}`);
   };
 
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  const toggleBackground = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
     <div className="max-w-8xl mx-auto">
-      <h1 className="text-5xl font-extrabold text-center mb-6 text-blue-400">Movies</h1>
+      <h1 className="text-5xl font-extrabold text-center mb-6 text-blue-400 mt-6">Movies</h1>
       <div className="p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {movies.map((movie, index) => (
           <div
@@ -65,7 +71,7 @@ function MovieList() {
               alt={`${movie.title} Poster`}
               className="w-full h-auto rounded-md mb-4"
             />
-            <h3 className="font-bold text-lg">{movie.title}</h3>
+            <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>{movie.title}</h3>            
             <p className="text-gray-600">{movie.genres}</p>
             <p className="text-gray-600">Release Date: {movie.release_date}</p>
             <p className="text-gray-600">Rating: {movie.vote_average}</p>
