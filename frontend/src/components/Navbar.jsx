@@ -17,7 +17,7 @@ function Navbar({ toggleBackground }) {
           <Link to="/movies" className="hover:text-gray-200 transition-colors">
             Movies
           </Link>
-          <Link to="/help" className="hover:text-gray-200 transition-colors">
+          <Link to="/helpmedicede" className="hover:text-gray-200 transition-colors">
             Help Me Decide
           </Link>
           <button onClick={toggleBackground} className="text-xl hover:text-gray-200 transition-colors">
