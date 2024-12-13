@@ -21,6 +21,8 @@ def fetch_movie_poster(title):
     try:
         response = requests.get(OMDB_API_URL, params={"t": title, "apikey": OMDB_API_KEY})
         data = response.json()
+        if response.status_code != 200:
+            return "https://via.placeholder.com/300"  # Fallback image
         
         # Check if the response is valid and contains a poster URL
         if response.status_code == 200:
