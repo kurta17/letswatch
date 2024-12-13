@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Recommendations() {
   const [movies, setMovies] = useState([]);
@@ -6,6 +7,8 @@ function Recommendations() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // Loading state
   const [suggestions, setSuggestions] = useState([]); // Suggestions state
+  const navigate = useNavigate();
+
 
   const fetchMovies = async () => {
     setLoading(true);
@@ -39,7 +42,7 @@ function Recommendations() {
   };
 
   const handleClick = (title) => {
-    alert(`You clicked on ${title}`);
+    navigate(`/movie/${title}`);
   };
 
   return (
