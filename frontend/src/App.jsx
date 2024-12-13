@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<TopMovies />} />
           <Route path="/movies" element={<MovieList />} />
-          <Route path="/help" element={<Recommendations />} />
+          <Route path="/helpmedicede" element={<Recommendations />} />
           <Route path="/movie/:title" element={<MovieInfo />} />
         </Routes>
       </div>

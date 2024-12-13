@@ -1,3 +1,7 @@
+from ml.data_preprocessing import load_and_preprocess_data
+from ml.feature_extraction import calculate_similarity, extract_features
+from ml.recommendation import get_all_close_match, recommend_movies
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
@@ -32,6 +36,57 @@ def fetch_movie_poster(title):
     return "https://m.media-amazon.com/images/M/MV5BMDEzMmQwZjctZWU2My00MWNlLWE0NjItMDJlYTRlNGJiZjcyXkEyXkFqcGc@._V1_SX300.jpg"  # Fallback image
 
 
+
+@app.route("/helpmedicede", methods=["GET"])
+def helpmedicede():
+    movie_title = request.args.get("title", "").strip()
+    if not movie_title:
+        return jsonify({"error": "Please provide a movie title"}), 400
+
+    movies_data = load_and_preprocess_data(MOVIE_DATA)
+    feature_vectors = extract_features(movies_data)
+    similarity_matrix = calculate_similarity(feature_vectors)
+
+    recommendations = recommend_movies(movie_title, movies_data, similarity_matrix)
+    rec_titles = get_all_close_match(movie_title, movies_data['title'].tolist())
+    
+    if not recommendations:
+        return jsonify({"error": "Movie not found or no recommendations available"}), 404
+
+    # Format response with title and poster URL
+    response = []
+    response.append({"title": (rec_titles)})
+    for movie_title in recommendations:
+        # Check if the movie exists in movies_data
+        movie_row = movies_data[movies_data["title"] == movie_title]
+        
+        if not movie_row.empty:
+            poster_url = fetch_movie_poster(movie_title)
+            # Ensure you are retrieving the first row of data for that movie
+            release_date = movie_row["release_date"].values[0]
+            vote_average = float(movie_row["vote_average"].values[0])
+            vote_count = int(movie_row["vote_count"].values[0])
+            
+            response.append({
+                "title": movie_title,
+                "poster": poster_url,
+                "release_date": release_date,
+                "vote_average": vote_average,
+                "vote_count": vote_count
+            })
+        else:
+            # Handle the case where movie title is not found in the data
+            response.append({
+                "title": movie_title,
+                "poster": "https://via.placeholder.com/300",  # Fallback image
+                "release_date": "N/A",
+                "vote_average": "N/A",
+                "vote_count": "N/A"
+            })
+            
+    return jsonify(response)
+
+
 @app.route("/top20movies", methods=["GET"])
 def get_top20movie():
     df = pd.read_csv(MOVIE_DATA)
@@ -55,7 +110,7 @@ def get_movies():
 
     movies = df[["title", "genres", "release_date", "vote_average", "vote_count"]]
     
-    # movies["poster"] = movies["title"].apply(fetch_movie_poster)
+    movies["poster"] = movies["title"].apply(fetch_movie_poster)
     
     start = (page - 1) * limit
     end = start + limit
