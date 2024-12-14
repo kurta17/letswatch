@@ -149,6 +149,7 @@ def get_movies():
     })
 
 
+
 @app.route("/movie/<string:title>", methods=["GET"])
 def get_movie_info(title):
     # Load the CSV file into a DataFrame
@@ -170,6 +171,9 @@ def get_movie_info(title):
     movie_info = movie.iloc[0].to_dict()
     movie_info["poster"] = movie["poster"].iloc[0]
     movie_info["trailer"] = trailer or "Trailer not available"
+
+    # Replace NaN values with None
+    movie_info = {k: (None if pd.isna(v) else v) for k, v in movie_info.items()}
 
     # Return the movie data as JSON
     return jsonify(movie_info)

@@ -1,0 +1,13 @@
+
+services:
+  frontend:
+    image: letswatch:latest
+    container_name: letswatch-frontend
+    ports:
+      - "80:80"
+
+  backend:
+    image: letswatch-backend:latest
+    container_name: letswatch-backend
+    ports:
+      - "5000:5000"
