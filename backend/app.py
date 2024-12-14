@@ -13,10 +13,6 @@ app = Flask(__name__)
 CORS(app)
 
 MOVIE_DATA = "data/movies.csv"
-OMDB_API_KEY = "c78b646c"  # Your actual API key
-OMDB_API_URL = "http://www.omdbapi.com/"
-KINO_API_KEY = "V1rnkkloqpAHyFuNhgMFeSYKqE2iWT1tYcZZ7cfUzzMLx2NlCoTmAQh4w956wLXi"
-KINO_API_URL = "https://api.kinocheck.com/movies"
 
 def fetch_movie_poster(title):
     try:
