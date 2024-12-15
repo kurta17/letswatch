@@ -8,9 +8,16 @@ import pandas as pd
 import requests
 from flask import request
 import numpy as np
+import logging
+from functools import lru_cache
+from flask_caching import Cache
+
 
 app = Flask(__name__)
 CORS(app)
+
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+
 
 MOVIE_DATA = "data/movies.csv"
 OMDB_API_KEY = "c78b646c"  # Your actual API key
@@ -115,6 +122,7 @@ def helpmedicede():
 
 
 @app.route("/top20movies", methods=["GET"])
+@cache.cached(timeout=300)
 def get_top20movie():
     df = pd.read_csv(MOVIE_DATA)
     top20 = df.sort_values(by="vote_average", ascending=False).head(20)
@@ -125,28 +133,44 @@ def get_top20movie():
 
     return jsonify(top20.to_dict(orient="records"))
 
+# logging.basicConfig(level=logging.DEBUG)
+
+@lru_cache(maxsize=1000)
+def fetch_movie_poster(title):
+    api_key = 'c78b646c'
+    url = f"http://www.omdbapi.com/?t={title}&apikey={api_key}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data.get('Poster', 'https://example.com/default_poster.jpg')
+    return 'https://example.com/default_poster.jpg'
 
 @app.route("/movies", methods=["GET"])
+@cache.cached(timeout=60, query_string=True)
 def get_movies():
+
     page = int(request.args.get("page", 1))  # Default to page 1
     limit = int(request.args.get("limit", 15))  # Default to 15 movies per page
 
-    df = pd.read_csv(MOVIE_DATA)
+    df = pd.read_csv(MOVIE_DATA, nrows=1000)    
     total_movies = len(df)
     total_pages = (total_movies + limit - 1) // limit  # Calculate total pages
 
     movies = df[["title", "genres", "release_date", "vote_average", "vote_count"]]
     
-    # movies["poster"] = movies["title"].apply(fetch_movie_poster)
-    
     start = (page - 1) * limit
     end = start + limit
     paginated_movies = movies.iloc[start:end]
+
+    # Fetch posters only for the movies in the current page
+    paginated_movies["poster"] = paginated_movies["title"].apply(fetch_movie_poster)
     
     return jsonify({
         "movies": paginated_movies.to_dict(orient="records"),
         "total_pages": total_pages
     })
+    
+
 
 
 
