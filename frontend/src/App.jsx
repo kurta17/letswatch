@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MovieList from './components/MovieList';
-import Recommendations from './components/Recommendations';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import TopMovies from './components/TopMovies';
+import MovieList from './components/MovieList';
+import Recommendations from './components/Recommendations';
 import MovieInfo from './components/MovieInfo';
+import Chatbox from './components/Chatbox';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -23,6 +24,7 @@ function App() {
           <Route path="/helpmedicede" element={<Recommendations />} />
           <Route path="/movie/:title" element={<MovieInfo />} />
         </Routes>
+        <Chatbox />
       </div>
     </Router>
   );

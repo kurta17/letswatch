@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Chatbox from './Chatbox'; // Import the Chatbox component
 
 function TopMovies() {
   const [topMovies, setTopMovies] = useState([]);  // State to store the movie data
@@ -29,7 +30,7 @@ function TopMovies() {
   };
 
   return (
-    <div style={{'width': '80rem'}} className="mx-auto p-4">
+    <div style={{ 'width': '80rem' }} className="mx-auto p-4">
       <h1 className="text-5xl font-extrabold text-center mb-20 text-blue-400 mt-4">Top 20 Movies</h1>
       <div className="flex overflow-x-auto space-x-4 pb-4">
         {topMovies.map((movie, index) => (
@@ -48,6 +49,7 @@ function TopMovies() {
           </div>
         ))}
       </div>
+      <Chatbox /> {/* Include the Chatbox component here */}
     </div>
   );
 }
